@@ -32,6 +32,7 @@ public class ProductWebMapper {
         productDto.setName(product.getName());
         productDto.setPrice(product.getPrice());
         productDto.setStock(product.getStock());
+        productDto.setPort(product.getPort());
         productDto.setCreateAt(product.getCreateAt());
         return productDto;
     }

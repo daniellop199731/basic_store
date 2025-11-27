@@ -17,6 +17,7 @@ public class Product {
     private String name;
     private Double price;
     private Integer stock;
+    private Integer port;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date createAt;

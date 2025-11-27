@@ -68,7 +68,7 @@ public class ProductApplicationService implements ProductUseCase  {
                 return product2;                
             });
             if(!product.isPresent()){
-                productObj.setAsNotSuccessful(message);
+                productObj.setAsSuccessful(message, new Product());
                 return productObj;
             }
             message = FOUND_PRODUCT_MESSAGE;
@@ -117,7 +117,7 @@ public class ProductApplicationService implements ProductUseCase  {
 
             if(!productRepository.existsById(id)){
                 message = NOT_FOUND_PRODUCT_BY_ID_MESSAGE + id;
-                productObj.setAsNotSuccessful(message);
+                productObj.setAsSuccessful(message, new Product());
                 return productObj;
             }
 
@@ -150,7 +150,7 @@ public class ProductApplicationService implements ProductUseCase  {
             Optional<Product> product = productRepository.findById(id);
             if(!product.isPresent()){
                 message = NOT_FOUND_PRODUCT_BY_ID_MESSAGE + id;
-                productObj.setAsNotSuccessful(message);
+                productObj.setAsSuccessful(message, new Product());
                 return productObj;
             }
             productRepository.deleteById(id);

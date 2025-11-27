@@ -3,11 +3,9 @@ package com.daniel.springcloud.msvc.products.infrastructure.adapter.in.api.contr
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.daniel.springcloud.msvc.products.application.utils.ResponseGenericObject;
-import com.daniel.springcloud.msvc.products.domain.model.Product;
 import com.daniel.springcloud.msvc.products.domain.port.in.ProductUseCase;
-import com.daniel.springcloud.msvc.products.infrastructure.adapter.in.api.dto.ProductDto;
-import com.daniel.springcloud.msvc.products.infrastructure.adapter.in.api.mapper.ProductWebMapper;
+import com.daniel.springcloud.msvc.products.infrastructure.adapter.in.api.dto.ProductApiDto;
+import com.daniel.springcloud.msvc.products.infrastructure.adapter.in.api.mapper.ProductApiMapper;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,69 +26,52 @@ import org.springframework.web.bind.annotation.PutMapping;
 public class ProductApiController {
 
     private final ProductUseCase useCase;
-    private final ProductWebMapper mapper;
+    private final ProductApiMapper mapper;
 
     @GetMapping("")
-    public ResponseEntity<ResponseGenericObject<List<ProductDto>>> getAllProducts() {        
-        return buildResponseEntityList(useCase.getAllProducts());        
+    public ResponseEntity<List<ProductApiDto>> getAllProducts() {
+        List<ProductApiDto> products = useCase.getAllProducts().getObj().stream().map(mapper::toDto).toList();
+        if(products == null){
+            return ResponseEntity.internalServerError().build();
+        }
+        return ResponseEntity.ok(products);
+               
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ResponseGenericObject<ProductDto>> getProductById(@PathVariable("id") Long id) {
-        return buildResponseEntity(useCase.getProductById(id));
+    public ResponseEntity<ProductApiDto> getProductById(@PathVariable("id") Long id) {
+        ProductApiDto product = mapper.toDto(useCase.getProductById(id).getObj());
+        if(product == null){
+            return ResponseEntity.internalServerError().build();
+        }
+        return ResponseEntity.ok(product);
     }
 
     @PostMapping("")
-    public ResponseEntity<ResponseGenericObject<ProductDto>> create(@Valid @RequestBody ProductDto productDto) {
-        return buildResponseEntity(useCase.createProduct(mapper.toModel(productDto)));
+    public ResponseEntity<ProductApiDto> create(@Valid @RequestBody ProductApiDto productDto) {
+        ProductApiDto product = mapper.toDto(useCase.createProduct(mapper.toModel(productDto)).getObj());
+        if(product == null){
+            return ResponseEntity.internalServerError().build();
+        }
+        return ResponseEntity.ok(product);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ResponseGenericObject<ProductDto>> update(@PathVariable("id") Long id, @Valid @RequestBody ProductDto productDto) {
-        return buildResponseEntity(useCase.updateProduct(id, mapper.toModel(productDto)));                
+    public ResponseEntity<ProductApiDto> update(@PathVariable("id") Long id, @Valid @RequestBody ProductApiDto productDto) {
+        ProductApiDto product = mapper.toDto(useCase.updateProduct(id, mapper.toModel(productDto)).getObj());
+        if(product == null){
+            return ResponseEntity.internalServerError().build();
+        }
+        return ResponseEntity.ok(product);                      
     }
     
     @DeleteMapping("/{id}")
-    public ResponseEntity<ResponseGenericObject<ProductDto>> delete(@PathVariable("id") Long id){
-        return buildResponseEntity(useCase.deleteProduct(id));
-    }
-
-    private ResponseEntity<ResponseGenericObject<List<ProductDto>>> buildResponseEntityList(ResponseGenericObject<List<Product>> responseGenObj){        
-        if(responseGenObj.isWithErrors()){
-            return ResponseEntity.internalServerError().body(
-                new ResponseGenericObject<>(
-                    responseGenObj.isSuccessful(),
-                    responseGenObj.getMessage(),
-                    null
-                )
-            );
-        }        
-        return ResponseEntity.ok(
-            new ResponseGenericObject<>(
-                responseGenObj.isSuccessful(),
-                responseGenObj.getMessage(),
-                responseGenObj.getObj().stream().map(mapper::toDto).toList()
-            )
-        );        
-    }
-
-    private ResponseEntity<ResponseGenericObject<ProductDto>> buildResponseEntity(ResponseGenericObject<Product> responseGenObj){        
-        if(responseGenObj.isWithErrors()){
-            return ResponseEntity.internalServerError().body(
-                new ResponseGenericObject<>(
-                    responseGenObj.isSuccessful(),
-                    responseGenObj.getMessage(),
-                    null
-                )
-            );
-        }       
-        return ResponseEntity.ok(
-            new ResponseGenericObject<>(
-                responseGenObj.isSuccessful(),
-                responseGenObj.getMessage(),
-                mapper.toDto(responseGenObj.getObj())
-            )
-        );        
+    public ResponseEntity<ProductApiDto> delete(@PathVariable("id") Long id){
+        ProductApiDto product = mapper.toDto(useCase.deleteProduct(id).getObj());
+        if(product == null){
+            return ResponseEntity.internalServerError().build();
+        }
+        return ResponseEntity.ok(product);        
     }    
             
 }

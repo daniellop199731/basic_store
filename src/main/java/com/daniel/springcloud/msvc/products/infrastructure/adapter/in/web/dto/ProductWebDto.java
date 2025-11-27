@@ -1,4 +1,4 @@
-package com.daniel.springcloud.msvc.products.infrastructure.adapter.in.api.dto;
+package com.daniel.springcloud.msvc.products.infrastructure.adapter.in.web.dto;
 
 import java.util.Date;
 
@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductDto {
+public class ProductWebDto {
     
     private Long id;
 
@@ -33,8 +33,6 @@ public class ProductDto {
 
     @PositiveOrZero(message = "El stock del producto no debe ser negativo")
     private Integer stock;
-
-    private Integer port;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date createAt;

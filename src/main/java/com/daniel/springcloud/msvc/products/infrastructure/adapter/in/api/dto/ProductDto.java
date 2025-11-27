@@ -34,7 +34,7 @@ public class ProductDto {
     @PositiveOrZero(message = "El stock del producto no debe ser negativo")
     private Integer stock;
 
-    private int port;
+    private Integer port;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date createAt;

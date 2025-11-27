@@ -64,15 +64,6 @@ public class ProductApiController {
                     null
                 )
             );
-        }
-        if(!responseGenObj.isSuccessful()){
-            return ResponseEntity.badRequest().body(
-                new ResponseGenericObject<>(
-                    responseGenObj.isSuccessful(),
-                    responseGenObj.getMessage(),
-                    null
-                )
-            );
         }        
         return ResponseEntity.ok(
             new ResponseGenericObject<>(
@@ -92,16 +83,7 @@ public class ProductApiController {
                     null
                 )
             );
-        }
-        if(!responseGenObj.isSuccessful()){
-            return ResponseEntity.badRequest().body(
-                new ResponseGenericObject<>(
-                    responseGenObj.isSuccessful(),
-                    responseGenObj.getMessage(),
-                    null
-                )
-            );
-        }        
+        }       
         return ResponseEntity.ok(
             new ResponseGenericObject<>(
                 responseGenObj.isSuccessful(),

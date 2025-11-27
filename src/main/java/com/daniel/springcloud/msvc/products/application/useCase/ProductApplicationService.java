@@ -3,6 +3,7 @@ package com.daniel.springcloud.msvc.products.application.useCase;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 public class ProductApplicationService implements ProductUseCase  {
 
     private final ProductRepositoryPort productRepository;
+    private final Environment environment;
 
     private ResponseGenericObject<List<Product>> productListObj     = new ResponseGenericObject<>();
     private ResponseGenericObject<Product> productObj               = new ResponseGenericObject<>();
@@ -41,7 +43,10 @@ public class ProductApplicationService implements ProductUseCase  {
     public ResponseGenericObject<List<Product>> getAllProducts() {        
         message = NOT_FOUND_PRODUCTS_MESSAGE;
         try{
-            List<Product> products = productRepository.findAll();
+            List<Product> products = (productRepository.findAll()).stream().map(product -> {
+                product.setPort(Integer.parseInt(environment.getProperty("local.server.port")));
+                return product;
+            }).toList();
             if(!products.isEmpty()){
                 message = FOUND_PRODUCTS_MESSAGE;
             }
@@ -58,7 +63,10 @@ public class ProductApplicationService implements ProductUseCase  {
     public ResponseGenericObject<Product> getProductById(Long id) {
         message = NOT_FOUND_PRODUCT_BY_ID_MESSAGE + id;
         try{
-            Optional<Product> product = productRepository.findById(id);
+            Optional<Product> product = productRepository.findById(id).map(product2 -> {
+                product2.setPort(Integer.parseInt(environment.getProperty("local.server.port")));
+                return product2;                
+            });
             if(!product.isPresent()){
                 productObj.setAsNotSuccessful(message);
                 return productObj;

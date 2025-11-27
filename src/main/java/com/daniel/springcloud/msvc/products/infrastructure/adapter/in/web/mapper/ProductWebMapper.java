@@ -1,14 +1,14 @@
-package com.daniel.springcloud.msvc.products.infrastructure.adapter.in.api.mapper;
+package com.daniel.springcloud.msvc.products.infrastructure.adapter.in.web.mapper;
 
 import org.springframework.stereotype.Component;
 
 import com.daniel.springcloud.msvc.products.domain.model.Product;
-import com.daniel.springcloud.msvc.products.infrastructure.adapter.in.api.dto.ProductDto;
+import com.daniel.springcloud.msvc.products.infrastructure.adapter.in.web.dto.ProductWebDto;
 
 @Component
 public class ProductWebMapper {
 
-    public Product toModel(ProductDto productDto){
+    public Product toModel(ProductWebDto productDto){
         if(productDto == null){
             return null;
         }
@@ -22,17 +22,16 @@ public class ProductWebMapper {
         return product;
     }
 
-    public ProductDto toDto(Product product){
+    public ProductWebDto toDto(Product product){
         if(product == null){
             return null;
         }
 
-        ProductDto productDto = new ProductDto();
+        ProductWebDto productDto = new ProductWebDto();
         productDto.setId(product.getId());
         productDto.setName(product.getName());
         productDto.setPrice(product.getPrice());
-        productDto.setStock(product.getStock());
-        productDto.setPort(product.getPort());
+        productDto.setStock(product.getStock());        
         productDto.setCreateAt(product.getCreateAt());
         return productDto;
     }

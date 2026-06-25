@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -39,7 +40,20 @@ public class ProductApiController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductApiDto> getProductById(@PathVariable("id") Long id) {
+    public ResponseEntity<ProductApiDto> getProductById(@PathVariable("id") Long id) throws InterruptedException {
+
+        //SIMULACION DE ERRORES
+        //EXCEPCION FABRICADA
+        if (id.equals(10L)){
+            throw new IllegalStateException("Producto no encontrado");
+        }
+
+        //TIMEOUT FABRICADO
+        if (id.equals(7L)){
+            TimeUnit.SECONDS.sleep(5L);
+        }
+        //SIMULACION DE ERRORES
+
         ProductApiDto product = mapper.toDto(useCase.getProductById(id).getObj());
         if(product == null){
             return ResponseEntity.internalServerError().build();

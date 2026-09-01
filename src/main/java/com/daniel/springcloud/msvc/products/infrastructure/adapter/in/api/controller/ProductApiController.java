@@ -50,8 +50,11 @@ public class ProductApiController {
 
         //TIMEOUT FABRICADO
         if (id.equals(7L)){
-            TimeUnit.SECONDS.sleep(5L);
+            TimeUnit.SECONDS.sleep(2L);
         }
+        if (id.equals(6L)){
+            TimeUnit.SECONDS.sleep(4L);
+        }        
         //SIMULACION DE ERRORES
 
         ProductApiDto product = mapper.toDto(useCase.getProductById(id).getObj());
